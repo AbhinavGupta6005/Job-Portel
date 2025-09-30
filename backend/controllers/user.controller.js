@@ -64,7 +64,7 @@ export const login = async (req, res) => {
     }
 
     //check role correct or not
-    if (role === user.role) {
+    if (role !== user.role) {
       return res.status(400).json({
         message: "Account doesn't exits with current role",
         success: false,
@@ -75,7 +75,7 @@ export const login = async (req, res) => {
       userId: user._id,
     };
     const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {
-      expiresIn: "Id",
+      expiresIn: "1d",
     });
 
     user = {
@@ -91,14 +91,17 @@ export const login = async (req, res) => {
       .status(200)
       .cookie("token", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpsOnly: true,
+        httpOnly: true,
         sameSite: "strict",
       })
       .json({
         message: `Welcome back ${user.fullname}`,
         success: true,
+        user
       });
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const logout = async (req, res) => {
@@ -116,16 +119,15 @@ export const updateProfile = async (req, res) => {
   try {
     const { fullname, email, phoneNumber, bio, skills } = req.body;
     const file = req.file;
-    if (!fullname || !email || !phoneNumber || !bio || !skills) {
-      return res.status(400).json({
-        message: "Something is missing",
-        success: false,
-      });
-    };
+    
 
     // cloudinary ayega idhar
 
-    const skillsArray = skills.split(",");
+    let skillsArray;
+    if(skills){
+      const skillsArray = skills.split(",");
+    }
+
     const userId = req.id;    // middleware authentication
     let user = await User.findById(userId);
 
@@ -137,11 +139,11 @@ export const updateProfile = async (req, res) => {
     }
 
     // updating data
-    user.fullname = fullname,
-    user.email = email,
-    user.phoneNumber = phoneNumber,
-    user.profile.bio = bio,
-    user.profile.skills = skillsArray
+    if(fullname) user.fullname = fullname;
+    if(email) user.email = email;
+    if(phoneNumber) user.phoneNumber = phoneNumber;
+    if(bio) user.profile.bio = bio;
+    if(skillsArray) user.profile.skills = skillsArray;
 
     // resume comes later here...
     await user.save();
