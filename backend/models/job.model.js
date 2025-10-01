@@ -5,14 +5,18 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    discription:{
+    description:{
         type: String,
         required: true
     },
-    reupirements:[{
+    requirements:[{
         type: String,
     }],
     salary:{
+        type: Number,
+        required: true
+    },
+    experienceLevel:{
         type: Number,
         required: true
     },
@@ -20,7 +24,7 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    jobtype:{
+    jobType:{
         type: String,
         required: true
     },
