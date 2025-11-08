@@ -18,7 +18,19 @@ const Jobs = () => {
                     </div>
                     {/* JobsCard */}
                     {
-                        jobArray.map((item, index) => <Job />)
+                        jobArray.length <= 0 ? <span>Job not found</span> : (
+                            <div className='flex-1 h-[80vh] overflow-y-auto pb-5'>
+                                <div className='grid grid-cols-3 gap-4'>
+                                    {
+                                        jobArray.map((item, index) => (
+                                            <div>
+                                                <Job/>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        )
                     }
                 </div>
             </div>
