@@ -1,18 +1,39 @@
 import React from 'react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
 import { Button } from "../ui/button.jsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut, User2 } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_API_END_POINT } from '@/utils/constant.js';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { setUser } from "@/redux/authSlice"; 
+
 
 
 const Navbar = () => {
 
-    const {user} = useSelector(store => store.auth)
+    const { user } = useSelector(store => store.auth);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const logoutHandler = async () => {
+        try {
+            const res = await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
+            if (res.data.success) {
+                dispatch(setUser(null));
+                navigate("/");
+                toast.success(res.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response?.data?.message || "Logout failed. Please try again.");
+        }
+    }
 
     return (
-        <div className='bg- white'>
+        <div>
             <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
                 <div>
                     <h1 className='text-2xl font-bold'>Job<span className='text-[#6A38C2]'>Portal</span></h1>
@@ -23,8 +44,8 @@ const Navbar = () => {
                         <li>Jobs</li>
                         <li>Browse</li> */}
                         <li><Link to="/">Home</Link></li>
-                        <li><Link to="jobs">Jobs</Link></li>
-                        <li><Link to="browse">Browse</Link></li>
+                        <li><Link to="/jobs">Jobs</Link></li>
+                        <li><Link to="/browse">Browse</Link></li>
                     </ul>
 
                     {
@@ -37,19 +58,20 @@ const Navbar = () => {
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Avatar className='cursor-pointer'>
-                                        <AvatarImage src="https://github.com/shadcn.png" alt='@sadcn' />
+                                        <AvatarImage src={user?.profile?.profilePhoto} alt='@sadcn' />
                                     </Avatar>
                                 </PopoverTrigger>
                                 <PopoverContent className='w-80 p-4 shadow-md rounded-xl'>
                                     <div>
-                                        <div className='flex gap-4 space-y-2'>
-                                            <Avatar className="cursor-pointer">
-                                                <AvatarImage src="https://github.com/shadcn.png" alt='@sadcn' />
-                                            </Avatar>
-                                            <div>
-                                                <h4 className='font-medium'>Abhinav Gupta</h4>
-                                                <p className='text-sm text-muted-foreground'>Lorem ipsum dolor sit amet consectetur.
-                                                </p>
+                                        <div className='gap-4 space-y-2 bg-white'>
+                                            <div className='flex gap-x-3'>
+                                                <Avatar className="cursor-pointer">
+                                                    <AvatarImage src={user?.profile?.profilePhoto} alt='@sadcn' />
+                                                </Avatar>
+                                                <div>
+                                                    <h4 className='font-medium'>{user?.fullname}</h4>
+                                                    <p className='text-sm text-muted-foreground'>{user?.profile?.bio}</p>
+                                                </div>
                                             </div>
                                             <div className='flex flex-col my-2 text-gray-600'>
                                                 <div className='flex w-fit items-center gap-2 cursor-pointer'>
@@ -59,7 +81,7 @@ const Navbar = () => {
 
                                                 <div className='flex w-fit items-center gap-2 cursor-pointer'>
                                                     <LogOut />
-                                                    <Button variant="link"> <Link to="/logout">Log out</Link></Button>
+                                                    <Button variant="link"  onClick={logoutHandler}>Log out</Button>
                                                 </div>
 
                                             </div>
