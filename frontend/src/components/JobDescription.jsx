@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from './shared/Navbar'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
@@ -12,8 +12,10 @@ import { toast } from 'sonner'
 const JobDiscription = () => {
 
     const {singleJob} = useSelector(store => store.job);
-    const {user} = useSelector(store => store.auth)
-    const isApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+    const {user} = useSelector(store => store.auth);
+    const isInitiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+    const [isApplied , setIsApplied] = useState(isInitiallyApplied);
+
     const params = useParams()
     const jobId = params.id;
     // console.log(params);
@@ -22,8 +24,11 @@ const JobDiscription = () => {
 
     const applyJobHandler = async() => {
         try{
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`);
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {withCredentials: true});
             if(res.data.success){
+                setIsApplied(true) // update the local state
+                const updateSingleJob = {...singleJob, applications: [...singleJob.applications, {applicant: user?._id}]}
+                dispatch(setSingleJob(updateSingleJob))   // help to real time ui update
                 toast.success(res.data.message);
             }
 
@@ -41,7 +46,8 @@ const JobDiscription = () => {
                 // console.log("a" + jobId);
                 const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
                 if (res.data.success) {
-                    dispatch(setSingleJob(res.data.job))
+                    dispatch(setSingleJob(res.data.job));
+                    setIsApplied(res.data.job.applications.some(application => application.applicant === user?._id));    // ensure tthe state is in sync with fetched data
                 }
             }
             catch (error) {
