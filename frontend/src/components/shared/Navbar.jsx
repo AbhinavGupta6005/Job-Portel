@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { USER_API_END_POINT } from '@/utils/constant.js';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { setUser } from "@/redux/authSlice"; 
+import { setUser } from "@/redux/authSlice";
 
 
 
@@ -39,13 +39,22 @@ const Navbar = () => {
                     <h1 className='text-2xl font-bold'>Job<span className='text-[#6A38C2]'>Portal</span></h1>
                 </div>
                 <div className='flex items-center gap-12'>
-                    <ul className='flex font-medium items-center gap-5 cursor-pointer '>
-                        {/* <li>Home</li>
-                        <li>Jobs</li>
-                        <li>Browse</li> */}
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/jobs">Jobs</Link></li>
-                        <li><Link to="/browse">Browse</Link></li>
+                    <ul className='flex font-medium items-center gap-5 cursor-pointer'>
+                        {
+                            user && user.role === 'recruiter' ? (
+                                <>
+                                    <li><Link to="/admin/compnaies">Companies</Link></li>
+                                    <li><Link to="/admin/jobs">Jobs</Link></li>
+                                </>
+                            ) : (
+                                <>
+                                    <li><Link to="/">Home</Link></li>
+                                    <li><Link to="/jobs">Jobs</Link></li>
+                                    <li><Link to="/browse">Browse</Link></li>
+                                </>
+                            )
+                        }
+
                     </ul>
 
                     {
@@ -74,14 +83,17 @@ const Navbar = () => {
                                                 </div>
                                             </div>
                                             <div className='flex flex-col my-2 text-gray-600'>
-                                                <div className='flex w-fit items-center gap-2 cursor-pointer'>
-                                                    <User2 />
-                                                    <Button variant="link"> <Link to="/profile">View Profile</Link></Button>
-                                                </div>
-
+                                                {
+                                                    user && user.role === 'student' && (
+                                                        <div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                            <User2 />
+                                                            <Button variant="link"> <Link to="/profile">View Profile</Link></Button>
+                                                        </div>
+                                                    )
+                                                }
                                                 <div className='flex w-fit items-center gap-2 cursor-pointer'>
                                                     <LogOut />
-                                                    <Button variant="link"  onClick={logoutHandler}>Log out</Button>
+                                                    <Button variant="link" onClick={logoutHandler}>Log out</Button>
                                                 </div>
 
                                             </div>

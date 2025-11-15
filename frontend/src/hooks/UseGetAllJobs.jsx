@@ -4,7 +4,7 @@ import axios from 'axios'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 
-const UseGetAllJobs = (jobId) => {
+const UseGetAllJobs = () => {
     const dispatch = useDispatch()
   useEffect(() => {
     const fetchAllJobs = async () => {
