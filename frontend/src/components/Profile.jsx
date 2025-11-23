@@ -8,10 +8,12 @@ import { Label } from '@radix-ui/react-label'
 import AppliedJobTable from './AppliedJobTable'
 import UpdateProfileDialog from './UpdateProfileDialog'
 import { useSelector } from 'react-redux'
+import useGetAppliedJob from '@/hooks/UseGetAppliedJobs'
 
 const isResume = true;
 
 const Profile = () => {
+  useGetAppliedJob();
   const[open, setOpen] = useState(false);
   const {user} = useSelector(store=>store.auth);
 
@@ -22,7 +24,7 @@ const Profile = () => {
         <div className='flex justify-between'>
           <div className='flex items-center gap-4'>
             <Avatar className="h-24 w-24">
-              <AvatarImage src="https://plus.unsplash.com/premium_photo-1669075651606-4e05fb681ec1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=880" alt="profileImg" />
+              <AvatarImage src={user?.profile?.profilePhoto} alt="profileImg" />
             </Avatar>
             <div>
               <h1 className='font-md text-xl'>{user?.fullname}</h1>

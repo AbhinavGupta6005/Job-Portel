@@ -117,7 +117,9 @@ export const updateStatus = async (req, res) => {
     try{
         const {status} = req.body;
         const applicationId = req.params.id;
-        if(!status){
+
+       const validStatuses = ["pending", "accepted", "rejected"];
+        if(!status || !validStatuses.includes(status.toLowerCase())){
             return res.status(400).json({
                 message: "Status not found",
                 success: false
@@ -125,7 +127,7 @@ export const updateStatus = async (req, res) => {
         };
 
         // find the application by application id
-        const application = await Application.findOne({_id: applicationId});
+        const application = await Application.findById({_id: applicationId});
         if(!application){
              return res.status(404).json({
                 message: "Application not found",

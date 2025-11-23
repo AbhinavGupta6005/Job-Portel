@@ -14,6 +14,7 @@ const applicationSchema = new mongoose.Schema({
     status:[{
         type: String,
         ref: ['pending','accepted','rejected'],
+        default: "pending"
     }],
 },{timestamps: true});
 
