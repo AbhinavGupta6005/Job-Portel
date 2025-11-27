@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { Label } from './ui/label'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { setSearchedQuery } from '@/redux/jobSlice'
 
 const filterData = [
@@ -57,4 +57,4 @@ const FilterCard = () => {
   )
 }
 
-export default FilterCard
+export default FilterCard;
