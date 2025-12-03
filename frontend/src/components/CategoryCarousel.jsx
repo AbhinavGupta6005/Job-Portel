@@ -8,7 +8,7 @@ import { setSearchedQuery } from "@/redux/jobSlice";
 import { SkipBack } from "lucide-react";
 
 const category = [
-  "Front Developer",
+  "Frontend Developer",
   "Backend Developer",
   "Data Science",
   "Graphic Designer",

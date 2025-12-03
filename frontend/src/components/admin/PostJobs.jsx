@@ -190,4 +190,4 @@ const PostJobs = () => {
     )
 }
 
-export default PostJobs
+export default PostJobs;
